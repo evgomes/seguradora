@@ -7,9 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.1.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.3.2" />
     <PackageReference Include="MSTest.TestFramework" Version="1.3.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Seguradora.Apresentacao.Web\Seguradora.Apresentacao.Web.csproj" />
+    <ProjectReference Include="..\Seguradora.Dominio\Seguradora.Dominio.csproj" />
+    <ProjectReference Include="..\Seguradora.Servicos\Seguradora.Servicos.csproj" />
+    <ProjectReference Include="..\Seguradora.Persistencia.EF\Seguradora.Persistencia.EF.csproj" />
   </ItemGroup>
 
 </Project>
