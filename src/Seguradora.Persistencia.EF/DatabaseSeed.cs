@@ -34,7 +34,36 @@ namespace Seguradora.Persistencia.EF
                                 Placa = "AVW2192"
                             }
                         }
-                    }
+                    },
+
+                    new Seguro
+                    {
+                        CpfCnpj = "11122233344",
+                        Tipo = ETipoSeguro.Residencial,
+                        SeguroSegurado = new SeguroSegurado
+                        {
+                            Residencia = new Residencia
+                            {
+                                Rua = "Rua Teste",
+                                Numero = 200,
+                                Bairro = "Bairro Teste",
+                                Cidade = "Curitiba"
+                            }
+                        }
+                    },
+
+                    new Seguro
+                    {
+                        CpfCnpj = "22233355544477",
+                        Tipo = ETipoSeguro.Vida,
+                        SeguroSegurado = new SeguroSegurado
+                        {
+                            Vida = new Vida
+                            {
+                                Cpf = "11122266688"
+                            }
+                        }
+                    },
                 };
 
                 foreach(var seguro in seguros)

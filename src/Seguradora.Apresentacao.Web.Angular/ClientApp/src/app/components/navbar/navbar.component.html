@@ -1,0 +1,24 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" routerLink='/seguros/listar'>
+    <i class="fa fa-dollar-sign"></i>
+  </a>
+  <button 
+    class="navbar-toggler" 
+    type="button" 
+    data-toggle="collapse" 
+    data-target="#mainMenu"
+    aria-controls="mainMenu" 
+    [attr.aria-expanded]="!isCollapsed"
+    aria-label="Toggle navigation"
+    (click)="isCollapsed = !isCollapsed">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="mainMenu">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a routerLink="/seguros/listar" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link">Seguros</a>
+      </li>
+    </ul>
+  </div>
+</nav>
