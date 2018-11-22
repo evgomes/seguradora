@@ -8,7 +8,7 @@ namespace Seguradora.Dominio.Sevicos.Comunicacao
         /// <summary>
         /// Indica se a solicitação foi bem-sucedida ou não.
         /// </summary>
-        public bool Successo { get; protected set; }
+        public bool Sucesso { get; protected set; }
 
         /// <summary>
         /// Mensagem de retorno, quando for o caso.
@@ -17,7 +17,7 @@ namespace Seguradora.Dominio.Sevicos.Comunicacao
 
         public BaseResposta(bool successo, string mensagem)
         {
-            Successo = successo;
+            Sucesso = successo;
             Mensagem = mensagem;
         }
     }

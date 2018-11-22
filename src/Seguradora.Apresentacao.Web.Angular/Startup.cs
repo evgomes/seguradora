@@ -1,3 +1,6 @@
+using System;
+using System.IO;
+using System.Reflection;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,6 +31,7 @@ namespace Seguradora.Apresentacao.Web.Angular
 
         public void ConfigureServices(IServiceCollection services)
         {
+            /*
             services.AddDbContext<SeguradoraDbContext>(options =>
             {
                 options.UseMySql(Configuration.GetConnectionString("SeguradoraDbContext"), opt =>
@@ -35,8 +39,9 @@ namespace Seguradora.Apresentacao.Web.Angular
                     opt.MigrationsAssembly(typeof(SeguradoraDbContext).Assembly.FullName);
                 });
             });
+            */
 
-            //services.AddDbContext<SeguradoraDbContext>(options => options.UseInMemoryDatabase("seguradora"));
+            services.AddDbContext<SeguradoraDbContext>(options => options.UseInMemoryDatabase("seguradora"));
 
             services.AddScoped<IRepositorioSeguros, RepositorioSeguros>();
             services.AddScoped<IUnidadeDeTrabalho, UnidadeDeTrabalho>();

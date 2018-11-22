@@ -1,9 +1,8 @@
+import { ToastrService } from 'ngx-toastr';
 import { Component, OnInit } from '@angular/core';
 
 import { Seguro } from '../../models/seguro';
-import { TipoSeguro } from '../../models/tipo-seguro';
 import { SegurosService } from '../../services/seguros.service';
-
 
 @Component({
   selector: 'app-lista-seguros',
@@ -11,42 +10,39 @@ import { SegurosService } from '../../services/seguros.service';
   styleUrls: ['./lista-seguros.component.css']
 })
 export class ListaSegurosComponent implements OnInit {
+  
   seguros: Seguro[] = [];
-  tipos: TipoSeguro[] = [];
-  codigoTipoSeguroSelecionado: number = 0;
+  segurosFiltrados: Seguro[] = [];
+  codigoTipoSegurado: number = 0;
 
-  constructor(private segurosService: SegurosService) { }
+  constructor(private segurosService: SegurosService, private toastrService: ToastrService) { }
 
   ngOnInit() {
-    this.popularTipos();
     this.popularSeguros();
   }
 
-  popularTipos() {
-    this.segurosService.getTiposSeguros().subscribe(resposta => {
-      if (!resposta.sucesso) {
-        alert(resposta.mensagem);
-        return;
-      }
-
-      this.tipos = resposta.dados;
-    });
-  }
-
   popularSeguros() {
-    this.segurosService.getSeguros(this.codigoTipoSeguroSelecionado).subscribe(resultado => {
-      if (!resultado.sucesso) {
-        alert(resultado.mensagem);
-        this.seguros.splice(0);
-        return;
+    this.segurosService.getSeguros(this.codigoTipoSegurado).subscribe(resultado => {
+      this.seguros.splice(0);
+
+      for (let seguro of resultado.dados) {
+        this.seguros.push(new Seguro(seguro));
       }
 
-      this.seguros = resultado.dados;
+      this.segurosFiltrados = this.seguros;
+    }, error => {
+      this.toastrService.error('Ocorreu um erro: ' + error);
+      this.seguros.splice(0);
     });
   }
 
-  onSelecionarTipoSeguro(codigoSelecionado : number) {
-    this.codigoTipoSeguroSelecionado = codigoSelecionado;
+  filtrarSeguros(placa: string) {
+    const placaFormatada = placa.toLowerCase();
+    this.segurosFiltrados = this.seguros.filter(s => s.placa.toLowerCase().startsWith(placaFormatada));
+  }
+
+  onSelecionarTipoSeguro(codigoTipoSelecionado: number) {
+    this.codigoTipoSegurado = codigoTipoSelecionado;
     this.popularSeguros();
   }
 }

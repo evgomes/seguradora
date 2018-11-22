@@ -1,30 +1,56 @@
-<div class="row">
-  <div class="col-6">
-    <div class="form-group">
-      <label for="tipoSeguro">Tipo de Seguro:</label>
-      <select class="form-control" id="tipoSeguro" (change)="onSelecionarTipoSeguro($event.target.value)">
-        <option selected="selected">.: Selecione :.</option>
-        <option *ngFor="let tipo of tipos" [value]="tipo.codigo">{{ tipo.nome }}</option>
-      </select>
-      <!-- Fazer opção da placa do veículo -->
-    </div>
+<div class="row mb-3">
+  <div class="col-12">
+    <h2>Listagem de Seguros</h2>
   </div>
 </div>
 
 <div class="row">
-  <div class="col-12" *ngIf="seguros.length > 0; else nenhumSeguro">
-    <table class="table table-striped table-responsive">
+  <div class="col-3">
+    <div class="form-group">
+      <app-select-tipos-seguro [codigoTipoSegurado]="codigoTipoSegurado" (onSelecionarTipoSeguro)="onSelecionarTipoSeguro($event)"></app-select-tipos-seguro>
+    </div>
+  </div>
+  <div class="col-3" *ngIf="codigoTipoSegurado == 1">
+    <div class="form-group">
+      <label for="placaVeiculo">Placa do Veículo:</label>
+      <input name="placaVeiculo" id="placaVeiculo" class="form-control" type="text" maxlength="7" (keyup)="filtrarSeguros($event.target.value)"></div>
+  </div>
+  <div class="col">
+    <a class="btn btn-primary float-right mt-4" routerLink="/seguros/novo">Novo Seguro</a>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12" *ngIf="segurosFiltrados.length > 0; else nenhumSeguro">
+    <table class="table table-striped table-bordered">
       <thead>
         <tr>
           <th scope="col">Código</th>
           <th scope="col">Identificação do Cliente (CPF / CNPJ)</th>
           <th scope="col">Tipo do Seguro</th>
+          <th *ngIf="codigoTipoSegurado == 1">Placa do Veículo</th> <!-- Veículo -->
+          <th *ngIf="codigoTipoSegurado == 2">Endereço</th> <!-- Residência-->
+          <th *ngIf="codigoTipoSegurado == 2">Bairro</th>
+          <th *ngIf="codigoTipoSegurado == 2">Cidade</th>
+          <th *ngIf="codigoTipoSegurado == 3">CPF do Segurado</th> <!-- Pessoa (seguro de vida) -->
+          <th>Ações</th>
       </thead>
       <tbody>
-        <tr *ngFor="let seguro of seguros">
+        <tr *ngFor="let seguro of segurosFiltrados">
           <td>{{ seguro.id }}</td>
-          <td>{{ seguro.cpfCnpj }}</td>
+          <td *ngIf="seguro.cpfCnpj.length == 11">{{ seguro.cpfCnpj | mask: '000.000.000-00' }}</td>
+          <td *ngIf="seguro.cpfCnpj.length == 14">{{ seguro.cpfCnpj | mask: '00.000.000/0000-00' }}</td>
           <td>{{ seguro.tipo }}</td>
+          <td *ngIf="codigoTipoSegurado == 1">{{ seguro.placaFormatada | mask: 'AAA-0000' }}</td>
+          <td *ngIf="codigoTipoSegurado == 2">{{ seguro.logradouro }}</td>
+          <td *ngIf="codigoTipoSegurado == 2">{{ seguro.bairro }}</td>
+          <td *ngIf="codigoTipoSegurado == 2">{{ seguro.cidade }}</td>
+          <td *ngIf="codigoTipoSegurado == 3">{{ seguro.cpfSegurado | mask: '000.000.000-00' }}</td>
+          <td class="text-center">
+            <a routerLink="/seguros/editar/{{seguro.id}}">
+              <i class="fa fa-edit" ngbTooltip="Editar"></i>
+            </a>
+          </td>
         </tr>
       </tbody>
     </table>

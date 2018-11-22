@@ -1,0 +1,5 @@
+<label for="tipoSeguro">Tipo de Seguro:</label>
+<select name="tipoSeguro" id="tipoSeguro" class="form-control" [disabled]="desabilitado" (change)="onSelecionarTipoSeguro($event.target.value);">
+  <option *ngIf="exibirOpcaoSelecione" value="0" [selected]="+codigoTipoSegurado <= 0">.: Selecione :.</option>
+  <option *ngFor="let tipo of tipos" [value]="tipo.codigo" [selected]="codigoTipoSegurado == tipo.codigo">{{ tipo.nome }}</option>
+</select>

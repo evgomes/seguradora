@@ -36,9 +36,35 @@ namespace Seguradora.Persistencia.EF.Repositorios.Seguros
             }
         }
 
+        public async Task<Seguro> GetAsync(int id)
+        {
+            return await _contexto.Seguros.Include(s => s.SeguroSegurado).ThenInclude(ss => ss.Residencia)
+                                          .Include(s => s.SeguroSegurado).ThenInclude(ss => ss.Vida)
+                                          .Include(s => s.SeguroSegurado).ThenInclude(ss => ss.Veiculo)
+                                          .SingleOrDefaultAsync(s => s.Id == id);
+                                          
+        }
+
+        public async Task AdicionarAsync(Seguro seguro)
+        {
+            await _contexto.Seguros.AddAsync(seguro);
+        }
+
+        public void Atualizar(Seguro seguro)
+        {
+            _contexto.Seguros.Update(seguro);
+        }
+
+        public void Excluir(Seguro seguro)
+        {
+            _contexto.Seguros.Remove(seguro);
+        }
+
         private async Task<IEnumerable<Seguro>> ListarSemRelacionamentosAsync()
         {
-            return await _contexto.Seguros.ToListAsync();
+            return await _contexto.Seguros.OrderByDescending(s => s.Id)
+                                          .AsNoTracking()
+                                          .ToListAsync();
         }
 
         private async Task<IEnumerable<Seguro>> ListarSegurosDeVidaAsync()
@@ -46,6 +72,8 @@ namespace Seguradora.Persistencia.EF.Repositorios.Seguros
             return await _contexto.Seguros.Include(s => s.SeguroSegurado)
                 .ThenInclude(ss => ss.Vida)
                 .Where(s => s.Tipo == ETipoSeguro.Vida)
+                .OrderByDescending(s => s.Id)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -54,6 +82,8 @@ namespace Seguradora.Persistencia.EF.Repositorios.Seguros
             return await _contexto.Seguros.Include(s => s.SeguroSegurado)
                 .ThenInclude(ss => ss.Residencia)
                 .Where(s => s.Tipo == ETipoSeguro.Residencial)
+                .OrderByDescending(s => s.Id)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -62,6 +92,8 @@ namespace Seguradora.Persistencia.EF.Repositorios.Seguros
             return await _contexto.Seguros.Include(s => s.SeguroSegurado)
                 .ThenInclude(ss => ss.Veiculo)
                 .Where(s => s.Tipo == ETipoSeguro.Automovel)
+                .OrderByDescending(s => s.Id)
+                .AsNoTracking()
                 .ToListAsync();
         }
     }

@@ -1,0 +1,111 @@
+<div class="row">
+    <div class="col-8 offset-2">
+
+        <h2 *ngIf="seguroId > 0; else novoSeguroTitulo">Editar Seguro</h2>
+        <ng-template #novoSeguroTitulo>
+            <h2>Cadastrar Seguro</h2>
+        </ng-template>
+
+        <form class="mt-3" #form="ngForm" (ngSubmit)="submit()" novalidate>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" #documentoCpf id="documento" name="documento" value="pessoaFisica" (change)="onAlterouTipoCliente($event.target.value)">
+                <label class="form-check-label" for="documetoCpf">Pessoa Física</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" #documentoCnpj id="documento" name="documento" value="pessoaJuridica" (change)="onAlterouTipoCliente($event.target.value)">
+                <label class="form-check-label" for="documentoCnpj">Pessoa Jurídica</label>
+            </div>
+
+            <div class="form-group" *ngIf="tipoCliente == 'pessoaFisica'">
+                <label for="cpfCnpj">CPF do cliente:</label>
+                <input type="text" id="cpfCnpj" name="cpfCnpj" class="form-control" #cpfCnpj="ngModel" [(ngModel)]="seguro.cpfCnpj" mask="000.000.000-00" required>
+                <div *ngIf="cpfCnpj.touched && !cpfCnpj.valid" class="alert alert-danger">
+                    Digite um CPF válido.
+                </div>
+            </div>
+
+            <div class="form-group" *ngIf="tipoCliente == 'pessoaJuridica'">
+                <label for="cpfCnpj">CNPJ do cliente:</label>
+                <input type="text" id="cpfCnpj" name="cpfCnpj" class="form-control" #cpfCnpj="ngModel" [(ngModel)]="seguro.cpfCnpj" mask="00.000.000/0000-00" required>
+                <div *ngIf="cpfCnpj.touched && !cpfCnpj.valid" class="alert alert-danger">
+                    Digite um CNPJ válido.
+                </div>
+            </div>
+
+            <div class="form-group">
+                <app-select-tipos-seguro [desabilitado]="seguroId > 0" [exibirOpcaoSelecione]="false"
+                    [codigoTipoSegurado]="seguro.codigoTipo" (onSelecionarTipoSeguro)="onSelecionarTipoSeguro($event)"></app-select-tipos-seguro>
+            </div>
+
+            <hr class="divider">
+
+            <div *ngIf="seguro.codigoTipo <= 0 || seguro.codigoTipo == 1" class="form-group">
+                <!-- Veículo -->
+                <label for="placa">Placa:</label>
+                <input type="text" id="placa" name="placa" class="form-control" #placa="ngModel" [(ngModel)]="seguro.placa" mask="AAA-0000" required>
+                <div *ngIf="placa.touched && !placa.valid" class="alert alert-danger">
+                    Digite a placa do veículo.
+                </div>
+            </div>
+
+            <div *ngIf="seguro.codigoTipo == 2" class="form-group">
+                <!-- Residencial -->
+                <label for="rua">Rua:</label>
+                <input type="text" id="rua" name="rua" class="form-control" #rua="ngModel" [(ngModel)]="seguro.rua"
+                    required maxlength="100">
+                <div *ngIf="rua.touched && !rua.valid" class="alert alert-danger">
+                    Digite a rua.
+                </div>
+            </div>
+
+            <div *ngIf="seguro.codigoTipo == 2" class="form-group">
+                <label for="numero">Número:</label>
+                <input type="number" id="numero" name="numero" class="form-control" #numero="ngModel" [(ngModel)]="seguro.numero"
+                    maxlength="5">
+            </div>
+
+            <div *ngIf="seguro.codigoTipo == 2" class="form-group">
+                <label for="bairro">Bairro:</label>
+                <input type="text" id="bairro" name="bairro" class="form-control" #bairro="ngModel" [(ngModel)]="seguro.bairro"
+                    required maxlength="100">
+                <div *ngIf="bairro.touched && !bairro.valid" class="alert alert-danger">
+                    Digite o bairro.
+                </div>
+            </div>
+
+            <div *ngIf="seguro.codigoTipo == 2" class="form-group">
+                <label for="cidade">Cidade:</label>
+                <input type="text" id="cidade" name="cidade" class="form-control" #cidade="ngModel" [(ngModel)]="seguro.cidade"
+                    required maxlength="100">
+                <div *ngIf="cidade.touched && !cidade.valid" class="alert alert-danger">
+                    Digite a cidade.
+                </div>
+            </div>
+
+            <div *ngIf="seguro.codigoTipo == 3" class="form-group">
+                <!-- Seguro de Vida -->
+                <label for="cpfSegurado">CPF do Segurado:</label>
+                <input type="text" id="cpfSegurado" name="cpfSegurado" class="form-control" #cpfSegurado="ngModel"
+                    [(ngModel)]="seguro.cpfSegurado" required minlength="11" maxlength="11">
+                <div *ngIf="cpfSegurado.touched && !cpfSegurado.valid" class="alert alert-danger">
+                    Digite o CPF do segurado.
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col" *ngIf="seguroId > 0; else novoSeguro">
+                    <button type="submit" class="btn btn-primary" (click)="action='save-after-edit'">Salvar</button>
+                    <a routerLink="/seguros/listar" class="btn btn-danger ml-3">Cancelar</a>
+                    <button type="button" class="btn btn-danger float-right" (click)="excluir()">Excluir</button>
+                </div>
+                <ng-template #novoSeguro>
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary" [disabled]="!form.valid">Salvar</button>
+                        <a routerLink="/seguros/listar" class="btn btn-danger float-right">Cancelar</a>
+                    </div>
+                </ng-template>
+            </div>
+        </form>
+
+    </div>
+</div>

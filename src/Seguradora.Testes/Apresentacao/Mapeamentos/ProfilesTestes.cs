@@ -21,6 +21,7 @@ namespace Seguradora.Testes.Apresentacao.Mapeamentos
             {
                 cfg.AddProfile(new ModelParaRecursoProfile());
                 cfg.AddProfile(new RespostaParaRecursoProfile());
+                cfg.AddProfile(new RecursoParaModelProfile());
             });
         }
 
@@ -62,13 +63,13 @@ namespace Seguradora.Testes.Apresentacao.Mapeamentos
                 Tipo = ETipoSeguro.Residencial,
                 SeguroSegurado = new SeguroSegurado
                 {
-                    Residencia = new Residencia
-                    {
-                        Rua = "Teste",
-                        Numero = 1,
-                        Bairro = "Teste",
-                        Cidade = "Teste"
-                    }
+                Residencia = new Residencia
+                {
+                Rua = "Teste",
+                Numero = 1,
+                Bairro = "Teste",
+                Cidade = "Teste"
+                }
                 }
             };
 
@@ -112,11 +113,11 @@ namespace Seguradora.Testes.Apresentacao.Mapeamentos
                 CpfCnpj = "12345678912",
                 Tipo = ETipoSeguro.Vida,
                 SeguroSegurado = new SeguroSegurado
-                    {
-                    Vida = new Vida
-                        {
-                        Cpf = "11122233344"
-                        }
+                {
+                Vida = new Vida
+                {
+                Cpf = "11122233344"
+                }
                 }
             };
 
@@ -126,15 +127,91 @@ namespace Seguradora.Testes.Apresentacao.Mapeamentos
             Assert.IsNotNull(resultado);
             Assert.AreEqual("11122233344", resultado.CpfSegurado);
         }
-    
+
         [TestMethod]
         public void Deve_Mapear_Resposta_Seguros_Para_Resposta_Json_Generica_Seguros()
         {
-            var resposta = SegurosResposta.CriarSucesso(new List<Seguro>{new Seguro()});
+            var resposta = SegurosResposta.CriarSucesso(new List<Seguro> { new Seguro() });
             var json = Mapper.Map<SegurosResposta, RespostaJsonGenerica<IEnumerable<RecursoSeguro>>>(resposta);
 
             Assert.IsInstanceOfType(json, typeof(RespostaJsonGenerica<IEnumerable<RecursoSeguro>>));
             Assert.IsTrue(json.Sucesso);
+        }
+
+        [TestMethod]
+        public void Deve_Mapear_Resposta_Gravar_Seguro_Para_Resposta_Json_Generica_Seguro()
+        {
+            var resposta = GravarSeguroResposta.CriarSucesso(new Seguro());
+            var json = Mapper.Map<GravarSeguroResposta, RespostaJsonGenerica<RecursoSeguro>>(resposta);
+
+            Assert.IsInstanceOfType(json, typeof(RespostaJsonGenerica<RecursoSeguro>));
+            Assert.IsTrue(json.Sucesso);
+        }
+
+        [TestMethod]
+        public void Deve_Mapear_Recurso_Salvar_Seguro_Veicular_Para_Model_Respectiva()
+        {
+            var recurso = new RecursoSalvarSeguro
+            {
+                CpfCnpj = "11122233344",
+                CodigoTipo = (int) ETipoSeguro.Automovel,
+                Placa = "AAA1111"
+            };
+
+            var resultado = Mapper.Map<RecursoSalvarSeguro, Seguro>(recurso);
+
+            Assert.IsNotNull(resultado.SeguroSegurado.Veiculo);
+            Assert.IsNull(resultado.SeguroSegurado.Vida);
+            Assert.IsNull(resultado.SeguroSegurado.Residencia);
+            Assert.AreEqual("11122233344", resultado.CpfCnpj);
+            Assert.AreEqual(ETipoSeguro.Automovel, resultado.Tipo);
+            Assert.AreEqual("AAA1111", resultado.SeguroSegurado.Veiculo.Placa);
+        }
+
+        [TestMethod]
+        public void Deve_Mapear_Recurso_Salvar_Seguro_Residencial_Para_Model_Respectiva()
+        {
+            var recurso = new RecursoSalvarSeguro
+            {
+                CpfCnpj = "11122233344",
+                CodigoTipo = (int) ETipoSeguro.Residencial,
+                Rua = "Rua Teste",
+                Numero = 1,
+                Bairro = "Bairro Teste",
+                Cidade = "Cidade Teste"
+            };
+
+            var resultado = Mapper.Map<RecursoSalvarSeguro, Seguro>(recurso);
+
+            Assert.IsNotNull(resultado.SeguroSegurado.Residencia);
+            Assert.IsNull(resultado.SeguroSegurado.Vida);
+            Assert.IsNull(resultado.SeguroSegurado.Veiculo);
+            Assert.AreEqual("11122233344", resultado.CpfCnpj);
+            Assert.AreEqual(ETipoSeguro.Residencial, resultado.Tipo);
+            Assert.AreEqual("Rua Teste", resultado.SeguroSegurado.Residencia.Rua);
+            Assert.AreEqual((short) 1, resultado.SeguroSegurado.Residencia.Numero);
+            Assert.AreEqual("Bairro Teste", resultado.SeguroSegurado.Residencia.Bairro);
+            Assert.AreEqual("Cidade Teste", resultado.SeguroSegurado.Residencia.Cidade);
+        }
+
+        [TestMethod]
+        public void Deve_Mapear_Recurso_Salvar_Seguro_Vida_Para_Model_Respectiva()
+        {
+            var recurso = new RecursoSalvarSeguro
+            {
+                CpfCnpj = "11122233344",
+                CodigoTipo = (int) ETipoSeguro.Vida,
+                CpfSegurado = "11122233344"
+            };
+
+            var resultado = Mapper.Map<RecursoSalvarSeguro, Seguro>(recurso);
+
+            Assert.IsNotNull(resultado.SeguroSegurado.Vida);
+            Assert.IsNull(resultado.SeguroSegurado.Veiculo);
+            Assert.IsNull(resultado.SeguroSegurado.Residencia);
+            Assert.AreEqual("11122233344", resultado.CpfCnpj);
+            Assert.AreEqual(ETipoSeguro.Vida, resultado.Tipo);
+            Assert.AreEqual("11122233344", resultado.SeguroSegurado.Vida.Cpf);
         }
     }
 }

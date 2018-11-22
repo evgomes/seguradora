@@ -16,30 +16,34 @@ namespace Seguradora.Apresentacao.Web.Angular.Mapeamentos
         public RespostaParaRecursoProfile()
         {
             CreateMap<SegurosResposta, RespostaJsonGenerica<IEnumerable<RecursoSeguro>>>()
-                .ForMember(src => src.Sucesso, opt => opt.MapFrom(src => src.Successo))
+                .ForMember(src => src.Sucesso, opt => opt.MapFrom(src => src.Sucesso))
                 .ForMember(src => src.Mensagem, opt => opt.MapFrom(src => src.Mensagem))
                 .ForMember(src => src.Dados, opt => opt.MapFrom(src => src.Seguros));
 
             CreateMap<SegurosResposta, RespostaJsonGenerica<IEnumerable<RecursoSeguradoResidencia>>>()
-                .ForMember(src => src.Sucesso, opt => opt.MapFrom(src => src.Successo))
+                .ForMember(src => src.Sucesso, opt => opt.MapFrom(src => src.Sucesso))
                 .ForMember(src => src.Mensagem, opt => opt.MapFrom(src => src.Mensagem))
                 .ForMember(src => src.Dados, opt => opt.MapFrom(src => src.Seguros));
 
             CreateMap<SegurosResposta, RespostaJsonGenerica<IEnumerable<RecursoSeguradoVeiculo>>>()
-                .ForMember(src => src.Sucesso, opt => opt.MapFrom(src => src.Successo))
+                .ForMember(src => src.Sucesso, opt => opt.MapFrom(src => src.Sucesso))
                 .ForMember(src => src.Mensagem, opt => opt.MapFrom(src => src.Mensagem))
                 .ForMember(src => src.Dados, opt => opt.MapFrom(src => src.Seguros));
 
             CreateMap<SegurosResposta, RespostaJsonGenerica<IEnumerable<RecursoSeguradoVida>>>()
-                .ForMember(src => src.Sucesso, opt => opt.MapFrom(src => src.Successo))
+                .ForMember(src => src.Sucesso, opt => opt.MapFrom(src => src.Sucesso))
                 .ForMember(src => src.Mensagem, opt => opt.MapFrom(src => src.Mensagem))
                 .ForMember(src => src.Dados, opt => opt.MapFrom(src => src.Seguros));
 
-
             CreateMap<TiposSeguroResposta, RespostaJsonGenerica<IEnumerable<RecursoTipoSeguro>>>()
-                .ForMember(src => src.Sucesso, opt => opt.MapFrom(src => src.Successo))
+                .ForMember(src => src.Sucesso, opt => opt.MapFrom(src => src.Sucesso))
                 .ForMember(src => src.Mensagem, opt => opt.MapFrom(src => src.Mensagem))
                 .ForMember(src => src.Dados, opt => opt.MapFrom(src => src.TiposSeguros));
+
+            CreateMap<GravarSeguroResposta, RespostaJsonGenerica<RecursoSeguro>>()
+                .ForMember(src => src.Sucesso, opt => opt.MapFrom(src => src.Sucesso))
+                .ForMember(src => src.Mensagem, opt => opt.MapFrom(src => src.Mensagem))
+                .ForMember(src => src.Dados, opt => opt.MapFrom(src => src.Seguro));
         }
     }
 }
