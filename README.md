@@ -2,6 +2,8 @@
 
 Aplicação de teste desenvolvida para listar, cadastrar, alterar, e excluir seguros residenciais, de vida e veiculares.
 
+![Aplicação](https://raw.githubusercontent.com/evgomes/seguradora/master/imagens/inicio.png)
+
 ## Tecnologias Utilizadas
 
 ### Aplicação Back-end
